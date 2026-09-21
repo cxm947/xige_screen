@@ -11,9 +11,9 @@ import zipfile
 from redub_core import VERSION,sha256,atomic_json,fail,RedubError
 
 ROOT_FILES={"SKILL.md","README.md","LICENSE","RELEASE_NOTES.md","requirements-media.txt","requirements-source.txt",".gitignore"}
-OPTIONAL_ROOT_FILES={"CONTRIBUTING.md","CHANGELOG.md",".gitattributes"}
+OPTIONAL_ROOT_FILES={"CONTRIBUTING.md","CHANGELOG.md",".gitattributes","Install.cmd","Run.cmd","requirements-windows.txt","requirements-windows.lock.txt"}
 ROOT_DIRS={"scripts","references","agents","assets","tests",".github"}
-EXTS={".py",".md",".txt",".json",".yaml",".yml"}
+EXTS={".py",".md",".txt",".json",".yaml",".yml",".ps1"}
 SENSITIVE=[re.compile(r"(?i)[a-z]:[\\/](?:Users|wechat_config)[\\/]"),
            re.compile(r"(?:sk-proj-|ghp_|github_pat_)[A-Za-z0-9_\-]{20,}"),
            re.compile(r"wxid_[A-Za-z0-9_]{8,}"),
@@ -34,7 +34,7 @@ def package(root,dest):
         if path.is_symlink():fail("SYMLINK_IN_RELEASE",path.relative_to(root).as_posix())
         if not path.is_file():continue
         rel=path.relative_to(root)
-        if rel.as_posix()=="release_manifest.json":continue
+        if rel.as_posix() in {"release_manifest.json","runtime.json"}:continue
         if "__pycache__" in rel.parts or path.suffix==".pyc":continue
         allowed=(len(rel.parts)==1 and rel.name in ROOT_FILES|OPTIONAL_ROOT_FILES) or (len(rel.parts)>1 and rel.parts[0] in ROOT_DIRS and path.suffix in EXTS)
         if not allowed:fail("UNEXPECTED_RELEASE_FILE",rel.as_posix())

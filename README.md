@@ -1,29 +1,31 @@
 # xige_screen
 
-[![Tests](https://github.com/cxm947/xige_screen/actions/workflows/test.yml/badge.svg)](https://github.com/cxm947/xige_screen/actions/workflows/test.yml) · [下载 v0.2.1](https://github.com/cxm947/xige_screen/releases/tag/v0.2.1) · [问题反馈](https://github.com/cxm947/xige_screen/issues)
+[![Tests](https://github.com/cxm947/xige_screen/actions/workflows/test.yml/badge.svg)](https://github.com/cxm947/xige_screen/actions/workflows/test.yml) · [下载 Skill](https://github.com/cxm947/xige_screen/releases/latest) · [问题反馈](https://github.com/cxm947/xige_screen/issues)
 
 从视频链接和主题出发，与用户一起找完整场景、写一场能听懂的戏、保留原场表演重录新词，最后逐句检查成片。
 
-这是一个 **agent skill + 可运行的本地制作核心**。找片判断、编剧和表演试听由 agent 与用户协作；账本、缓存、时间映射、混音、编码和装配检查由脚本执行。不是“一键无审稿模仿所有演员”的服务。
+这是一个 **桌面 agent 技能 + Windows 自动安装的本地配音引擎**。找片判断、编剧和表演试听由 agent 与用户协作；账本、缓存、时间映射、混音、编码和装配检查由脚本执行。不是“一键无审稿模仿所有演员”的服务。
 
-## 安装与调用
+## Windows：下载、解压、双击安装
 
-从 [Releases](https://github.com/cxm947/xige_screen/releases/latest) 下载 `xige_screen-pro-0.2.1.zip`，解压得到 `scene-redub/`。同页提供 SHA-256 校验文件；GitHub 自动生成的 Source code 压缩包是源码快照，安装时也需保留完整技能目录。
+1. 从 [Releases](https://github.com/cxm947/xige_screen/releases/latest) 下载 `xige_screen-skill-0.3.0.zip` 并解压。
+2. 双击 `scene-redub/Install.cmd`。自动下载独立 Python、FFmpeg、推理依赖和约 7.1 GB 模型，不需要自己配 Python、Git、CUDA Toolkit 或 API key。
+3. 安装会真实生成新语音并合成测试视频，通过后把技能安装到本地技能目录。
+4. 在支持本地工具的 ChatGPT 桌面 Work／Codex 里选择 `scene-redub`，输入视频链接和主题。ChatGPT 用 `@` 选择，Codex 可用 `$scene-redub`。
 
-把整个 `scene-redub/` 放入支持 SKILL.md 的宿主技能目录。Codex 用户可放到 `~/.codex/skills/scene-redub/`（配置了 CODEX_HOME 时用其 skills 目录）；不要只复制 SKILL.md。重新加载技能后输入：
+**小技能包＋首次自动配置环境**：ZIP 不包含 Python 本体、PyTorch 或模型权重。如果先通过客户端装好了技能，首次调用时也会自动安装缺少的环境，然后继续任务。以后复用已验证的环境与模型。
 
-> 使用 $scene-redub。视频链接：……；主题：AI 行业。先帮我确认完整饭局，再磨台词，最后配音。
+> 使用 scene-redub。视频链接：……；主题：AI 行业。按原场景的剧情和人物语气改词，先让我听小样，再配完整段。
 
-核心账本命令只需 Python 3.10+；媒体命令需要 numpy 和 FFmpeg。可在独立虚拟环境安装：
+首次需联网下载。Windows x64，建议 32 GB 内存、25 GB 空闲磁盘、12 GB 以上 NVIDIA 显存；没有适用显卡、或当前可用内存不足时自动用 CPU，速度较慢。安装环境与影片项目独立，清理视频中间文件不会删除模型。自定义安装盘、续装、诊断、实际制作命令见 [Windows 指南](references/windows.md)。
 
-```text
-python -m pip install -r requirements-media.txt
-python scripts/redub.py doctor
-```
+这是运行本地工具的桌面技能：仅把 ZIP 上传到普通云端聊天不会让它使用你的电脑和 GPU。客户端须支持本地技能与程序执行。当前官方入口见 [OpenAI 技能说明](https://learn.chatgpt.com/docs/build-skills)。
 
-如果机器已有 FFmpeg 可直接用；否则 imageio-ffmpeg 提供二进制。需要 libx264、AAC、ass、loudnorm、aresample、asetpts。可选下载工具安装 `requirements-source.txt`；网站支持随源站变化，无可用链接时可导入本地文件。
+双击 `Run.cmd` 查看用法；`Run.cmd doctor` 检查环境，`Run.cmd self-test` 再次验证真实推理与视频合成。安装的模型源码和文件哈希锁定；后续安装复用校验通过的下载。
 
-配音模型单独配置，见 [后端说明](references/backends.md)。本包不安装 CUDA、不自动下载权重、不要求 API key。没有可用模型也能先完成片源、台词和参考清单；也支持导入其他工具的完整录音。
+## 其他环境／已有后端
+
+核心 Python 3.10+ 仍可独立运行：`python -m pip install -r requirements-media.txt`，然后 `python scripts/redub.py doctor`。下载片源另装 `requirements-source.txt`。其他平台的模型环境按 [后端说明](references/backends.md) 配置；Windows 自动安装流程专门处理本地推理依赖。
 
 ## 无模型的可运行例子
 
@@ -50,7 +52,7 @@ python scripts/redub.py render /path/to/demo-project
 
 ## 能力边界
 
-当前是单声道短场景工具。自动人声分离、ASR、声纹验证、口型重建、复杂重叠人声和云端配音 SDK 没有打包成内置功能；可用已有工具处理后导入。IndexTTS 适配器是可选后端，不作全平台 GPU 兼容承诺。配音质量必须通过真实试听判断。
+当前是单声道短场景工具。Windows 包提供 IndexTTS 配音、Whisper 转录入口和视频装配；自动人声分离、声纹验证、口型重建、复杂重叠人声和云端配音 SDK 不在内置功能中。背景分轨或干净现场底声按原片情况准备；配音质量仍需真实试听。
 
 支持相对资产路径和 UTF-8。测试平台及实际测试结果见 [RELEASE_NOTES.md](RELEASE_NOTES.md)；CI 定义不等于对应平台已经跑过。
 

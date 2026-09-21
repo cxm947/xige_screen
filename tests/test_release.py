@@ -49,6 +49,11 @@ class ReleaseTests(unittest.TestCase):
         self.assertEqual(first["sha256"],second["sha256"])
         with zipfile.ZipFile(self.base/"checkout.zip") as archive:
             self.assertFalse(any(".git/" in p for p in archive.namelist()))
+    def test_installed_runtime_locator_is_never_published(self):
+        first=package(self.root,self.base/"before.zip")
+        (self.root/"runtime.json").write_text('{"root":"C:'+"/Users/"+'private/engine"}',encoding="utf-8")
+        second=package(self.root,self.base/"after.zip")
+        self.assertEqual(first["sha256"],second["sha256"])
 
 
 if __name__=="__main__":unittest.main()

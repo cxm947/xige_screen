@@ -15,3 +15,13 @@ jobs:
       - run: python -m pip install -r requirements-media.txt
       - run: python scripts/redub.py doctor
       - run: python -m unittest discover -s tests -v
+      - name: Parse Windows entrypoints
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          Get-ChildItem scripts/*.ps1 | ForEach-Object {
+            $tokens = $null
+            $errors = $null
+            [System.Management.Automation.Language.Parser]::ParseFile($_.FullName, [ref]$tokens, [ref]$errors) | Out-Null
+            if ($errors.Count) { throw ($errors | Out-String) }
+          }

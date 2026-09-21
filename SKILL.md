@@ -15,13 +15,17 @@ description: "把视频链接和主题做成影视二创配音短片：找准完
 
 `<skill>` 是本目录；`<project>` 是独立制作目录。中间文件放项目 `work/`，发行包不放项目媒体。
 
+Windows 优先使用本包自动安装的环境。先读 [windows.md](references/windows.md)：`runtime.json` 给出已安装引擎的位置。运行 `<skill>/Run.cmd doctor`；首次调用会自动执行安装，下载独立 Python、FFmpeg、IndexTTS 2.5 与模型，生成真实配音并合成测试视频后才报成功。用户也可双击 `<skill>/Install.cmd` 提前装好。发行 ZIP 只含小体积技能、脚本、依赖与模型清单，不打包 Python 本体、PyTorch 或模型权重。安装可能耗时较长，查看原进程和安装日志续等。不要再让用户自己配 Python、找模型、修改适配器里的路径。项目清理不能删除持久引擎目录。
+
+安装后用 `Run.cmd core` 代替下面的 `python <skill>/scripts/redub.py`；`Run.cmd generate <project> --turn ID --select` 自动带入后端配置。`Run.cmd prepare` 可根据已核对的场景计划提取双参考、创建账本；`Run.cmd transcribe` 可做原片／成片转录。命令和场景计划格式见 Windows 指南。当前客户端必须能执行本地文件；云端普通聊天不能使用用户电脑上的 GPU。
+
 ```text
 python <skill>/scripts/redub.py doctor
 python <skill>/scripts/redub.py init <project> --url "视频链接" --topic "用户主题"
 python <skill>/scripts/redub.py status <project>
 ```
 
-结构与命令见 [project-contract.md](references/project-contract.md)。没有模型也先完成找片、角色账本和剧本；预检不自动下载大模型。
+结构与命令见 [project-contract.md](references/project-contract.md)。安装等待期间先完成找片、角色账本和剧本。核心 CLI 的 `doctor` 不下载模型；Windows `Run.cmd` 在首次调用时先配置环境。
 
 ## 制作顺序
 

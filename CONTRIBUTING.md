@@ -27,3 +27,7 @@ python scripts/package_release.py --output ../scene-redub-release.zip
 打包器接受 Git checkout，会跳过 `.git` 和 Python 缓存，其他文件仍按允许列表检查。它拒绝覆盖已有 ZIP，生成文件清单和 SHA-256。解压后重新打包，哈希应相同。
 
 发布前核对版本与实际测试记录、解压安装、完整媒体导出及包中文件清单。CI 配置存在不等于 CI 已通过；未做的环境测试和未试听的演员效果写清楚。公开代码包不包含制作项目媒体。
+
+Windows 推理依赖的直接输入在 `requirements-windows.txt`，实际解析的固定版本在 `requirements-windows.lock.txt`。修改后用独立 Python 3.11 环境安装，再核对 CPU / CUDA 分支；PyTorch 变体由安装器单独选择。模型与源码的版本、大小、SHA-256 分别在模型清单和安装器中，不跟随上游 latest。
+
+复杂 Skill 发布按 skill-creator 流程检查 frontmatter、引用和脚本，再从解压包做独立制作验证。标准结构保持 `SKILL.md`、`agents/`、`scripts/`、`references/`、`assets/`；README、安装入口、测试与版本记录服务于本仓库的开源发布。大依赖只在首次使用时下载，不纳入 ZIP。

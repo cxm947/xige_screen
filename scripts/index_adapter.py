@@ -56,6 +56,9 @@ def main():
     runtime=[str(Path(v).expanduser().resolve()) for v in config.get("runtime_paths",[])]
     sys.path[:0]=runtime+[str(repo)]
     os.environ.setdefault("HF_HUB_OFFLINE","1")
+    from windows_compat import enable_windows_fst_paths, enable_windows_weight_reads
+    enable_windows_fst_paths()
+    enable_windows_weight_reads()
     import numpy as np
     import torch
     import soundfile as sf
@@ -70,6 +73,8 @@ def main():
     print("Fingerprinting model/source files; first run reads model weights once.",flush=True)
     model_manifest=tree_manifest(models,{".yaml",".yml",".json",".safetensors",".pt",".pth",".bin",".model",".tiktoken"})
     code_manifest=tree_manifest(repo/"indextts",{".py",".yaml",".yml",".json"})
+    for helper in ('index_adapter.py', 'windows_compat.py'):
+        code_manifest['adapter/'+helper]=sha256(Path(__file__).with_name(helper))
     backend={"name":"IndexTTS","version":"2.5","model_manifest_hash":digest(model_manifest),
              "code_manifest_hash":digest(code_manifest),"runtime":runtime_versions,
              "params":{"seed":args.seed,"emo_alpha":args.alpha,"duration_factor":args.duration_factor,
@@ -136,6 +141,8 @@ def main():
 
 if __name__=="__main__":
     if hasattr(sys.stdout,"reconfigure"):sys.stdout.reconfigure(encoding="utf-8")
-    try:main()
+    try:
+        from inference_lock import inference_lock
+        with inference_lock():main()
     except RedubError as exc:
         print(json.dumps({"error":exc.code,"message":str(exc)},ensure_ascii=False));raise SystemExit(2)
