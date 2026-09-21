@@ -1,10 +1,14 @@
 # Scene Redub
 
+[![Tests](https://github.com/cxm947/scene-redub/actions/workflows/test.yml/badge.svg)](https://github.com/cxm947/scene-redub/actions/workflows/test.yml) · [下载 v0.2.1](https://github.com/cxm947/scene-redub/releases/tag/v0.2.1) · [问题反馈](https://github.com/cxm947/scene-redub/issues)
+
 从视频链接和主题出发，与用户一起找完整场景、写一场能听懂的戏、保留原场表演重录新词，最后逐句检查成片。
 
 这是一个 **agent skill + 可运行的本地制作核心**。找片判断、编剧和表演试听由 agent 与用户协作；账本、缓存、时间映射、混音、编码和装配检查由脚本执行。不是“一键无审稿模仿所有演员”的服务。
 
 ## 安装与调用
+
+从 [Releases](https://github.com/cxm947/scene-redub/releases/latest) 下载 `scene-redub-pro-0.2.1.zip`，解压得到 `scene-redub/`。同页提供 SHA-256 校验文件；GitHub 自动生成的 Source code 压缩包是源码快照，安装时也需保留完整技能目录。
 
 把整个 `scene-redub/` 放入支持 SKILL.md 的宿主技能目录。Codex 用户可放到 `~/.codex/skills/scene-redub/`（配置了 CODEX_HOME 时用其 skills 目录）；不要只复制 SKILL.md。重新加载技能后输入：
 
