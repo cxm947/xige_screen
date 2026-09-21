@@ -9,7 +9,7 @@
 - 具体方法、修正和边界见 [第二场测试记录](references/cross-scene-test.md)。本轮换片已获委托方试听认可并授权发布；这是当前样片的反馈，不代表任意演员均能达到相同效果。
 - Skill 格式检查通过。远端 CI 是否完成应以实际 GitHub Actions 记录为准；本地测试不冒充跨平台验证。
 
-正式发布入口：[v0.2.1](https://github.com/cxm947/scene-redub/releases/tag/v0.2.1)。
+正式发布入口：[v0.2.1](https://github.com/cxm947/xige_screen/releases/tag/v0.2.1)。
 
 ---
 

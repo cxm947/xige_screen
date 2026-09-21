@@ -1,4 +1,4 @@
 interface:
-  display_name: "Scene Redub · 影视二创配音"
+  display_name: "xige_screen · 影视二创配音"
   short_description: "从视频链接和主题开始，找完整片段、打磨台词、保留表演并逐句验收配音"
   default_prompt: "使用 $scene-redub，把这个视频链接按我的主题改成二创短片，先找准完整场景，再打磨台词和配音。"
