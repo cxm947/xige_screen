@@ -15,7 +15,7 @@ import time
 import uuid
 from pathlib import Path
 
-VERSION = "0.2.0"
+VERSION = "0.2.1"
 SCHEMA_VERSION = 1
 STAGES = ("source", "script", "pilot")
 IDENTIFIER = re.compile(r"^[A-Za-z0-9_-]{1,80}$")

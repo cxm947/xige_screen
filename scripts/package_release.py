@@ -11,7 +11,7 @@ import zipfile
 from redub_core import VERSION,sha256,atomic_json,fail,RedubError
 
 ROOT_FILES={"SKILL.md","README.md","LICENSE","RELEASE_NOTES.md","requirements-media.txt","requirements-source.txt",".gitignore"}
-OPTIONAL_ROOT_FILES={"CONTRIBUTING.md","CHANGELOG.md"}
+OPTIONAL_ROOT_FILES={"CONTRIBUTING.md","CHANGELOG.md",".gitattributes"}
 ROOT_DIRS={"scripts","references","agents","assets","tests",".github"}
 EXTS={".py",".md",".txt",".json",".yaml",".yml"}
 SENSITIVE=[re.compile(r"(?i)[a-z]:[\\/](?:Users|wechat_config)[\\/]"),
