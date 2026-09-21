@@ -10,6 +10,22 @@ python -m unittest discover -s tests -v
 
 模型适配器在它自己的可用环境中运行，不把 GPU 依赖塞进核心环境。复现问题时先记录 Python、FFmpeg 和后端版本。
 
+## 本地开发示例
+
+核心需要 Python 3.10+。下载片源时另装 `requirements-source.txt`。下面的示例使用合成色块和音调，不需要配音模型：
+
+```text
+python scripts/make_demo.py /path/to/demo-project
+python scripts/redub.py render /path/to/demo-project
+python scripts/redub.py status /path/to/demo-project
+python scripts/revise_demo.py /path/to/demo-project
+python scripts/redub.py render /path/to/demo-project
+```
+
+示例验证角色分句、剪辑时间映射和音轨合成；`revise_demo.py` 演示修改 A 后替换对应录音、复用 B。真实项目的数据结构与命令见 [项目契约](references/project-contract.md)。
+
+核心测试不需要联网或模型。媒体测试需要 numpy 和 FFmpeg，缺少时会标记 skip。实际平台与模型验证记录见 [发布说明](RELEASE_NOTES.md)。
+
 ## 提交修改
 
 报告具体的输入、命令、预期行为和实际错误。配音问题请提供句子 ID、时间范围、是词不清还是语气不对；可使用合成素材复现工程问题。不需要把完整影片、原声参考、模型权重、密钥或带个人目录的日志提交到 issue。

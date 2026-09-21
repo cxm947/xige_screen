@@ -1,73 +1,85 @@
 # xige_screen
 
-[![Tests](https://github.com/cxm947/xige_screen/actions/workflows/test.yml/badge.svg)](https://github.com/cxm947/xige_screen/actions/workflows/test.yml) · [下载 Skill](https://github.com/cxm947/xige_screen/releases/latest) · [问题反馈](https://github.com/cxm947/xige_screen/issues)
+**影视二创配音 Skill：换一套台词，演好同一场戏。**
 
-从视频链接和主题出发，与用户一起找完整场景、写一场能听懂的戏、保留原场表演重录新词，最后逐句检查成片。
+[下载](https://github.com/cxm947/xige_screen/releases/latest) · [快速开始](#快速开始) · [使用示例](#使用示例) · [问题反馈](https://github.com/cxm947/xige_screen/issues)
 
-这是一个 **桌面 agent 技能 + Windows 自动安装的本地配音引擎**。找片判断、编剧和表演试听由 agent 与用户协作；账本、缓存、时间映射、混音、编码和装配检查由脚本执行。不是“一键无审稿模仿所有演员”的服务。
+给 AI 一个视频链接或本地片段，再告诉它你想聊的主题。xige_screen 会引导 AI 找准场景、改写对话、制作配音小样，再完成字幕和视频合成。
 
-## Windows：下载、解压、双击安装
+改词围绕原戏的人物关系和对话节奏展开；配音使用同场景的角色声音作为参考，尽量保留语气、停顿和情绪。适合电影片段改编、行业吐槽、热点讽刺，以及已有二创视频的剧本和配音打磨。
 
-1. 从 [Releases](https://github.com/cxm947/xige_screen/releases/latest) 下载 `xige_screen-skill-0.3.0.zip` 并解压。
-2. 双击 `scene-redub/Install.cmd`。自动下载独立 Python、FFmpeg、推理依赖和约 7.1 GB 模型，不需要自己配 Python、Git、CUDA Toolkit 或 API key。
-3. 安装会真实生成新语音并合成测试视频，通过后把技能安装到本地技能目录。
-4. 在支持本地工具的 ChatGPT 桌面 Work／Codex 里选择 `scene-redub`，输入视频链接和主题。ChatGPT 用 `@` 选择，Codex 可用 `$scene-redub`。
+## 能做什么
 
-**小技能包＋首次自动配置环境**：ZIP 不包含 Python 本体、PyTorch 或模型权重。如果先通过客户端装好了技能，首次调用时也会自动安装缺少的环境，然后继续任务。以后复用已验证的环境与模型。
+- **沿着原戏改剧本**：保留请求、反问、谈条件和收尾的逻辑，让新台词接得上人物的反应。
+- **用原场表演做配音参考**：结合角色音色与对应台词的表演，整句生成新对白，先听小样再做整段。
+- **按角色逐句配音**：核对谁在说话、什么时候开口和收口，检查空音轨、漏字及被截断的句尾。
+- **生成字幕和成片**：按语音时间安排字幕，处理音量与接话，导出 MP4 和 SRT。
+- **接着反馈继续改**：可以指定某一句重写或重录，保留已经确认的其他部分。
 
-> 使用 scene-redub。视频链接：……；主题：AI 行业。按原场景的剧情和人物语气改词，先让我听小样，再配完整段。
+## 快速开始
 
-首次需联网下载。Windows x64，建议 32 GB 内存、25 GB 空闲磁盘、12 GB 以上 NVIDIA 显存；没有适用显卡、或当前可用内存不足时自动用 CPU，速度较慢。安装环境与影片项目独立，清理视频中间文件不会删除模型。自定义安装盘、续装、诊断、实际制作命令见 [Windows 指南](references/windows.md)。
+### 1. 安装 Skill
 
-这是运行本地工具的桌面技能：仅把 ZIP 上传到普通云端聊天不会让它使用你的电脑和 GPU。客户端须支持本地技能与程序执行。当前官方入口见 [OpenAI 技能说明](https://learn.chatgpt.com/docs/build-skills)。
+从 [Releases](https://github.com/cxm947/xige_screen/releases/latest) 下载 `xige_screen-skill-*.zip`，解压后双击 `scene-redub/Install.cmd`。
 
-双击 `Run.cmd` 查看用法；`Run.cmd doctor` 检查环境，`Run.cmd self-test` 再次验证真实推理与视频合成。安装的模型源码和文件哈希锁定；后续安装复用校验通过的下载。
+安装程序会自动配置 Python、配音依赖和模型，再把 Skill 安装到本地技能目录。首次需要联网下载约 **7.1 GB 模型**及运行依赖，后续复用；无需手动配置 Python 或 API key。
 
-## 其他环境／已有后端
+### 2. 在客户端调用
 
-核心 Python 3.10+ 仍可独立运行：`python -m pip install -r requirements-media.txt`，然后 `python scripts/redub.py doctor`。下载片源另装 `requirements-source.txt`。其他平台的模型环境按 [后端说明](references/backends.md) 配置；Windows 自动安装流程专门处理本地推理依赖。
+在支持本地工具的 **ChatGPT 桌面工作模式或 Codex** 中，选择 **xige_screen · 影视二创配音**。技能调用名为 `scene-redub`；Codex 可输入 `$scene-redub`，ChatGPT 可在 `@` 菜单中选择。
 
-## 无模型的可运行例子
+如果已经通过客户端安装了 Skill，首次调用也会自动配置所需环境。
 
-```text
-python scripts/make_demo.py /path/to/demo-project
-python scripts/redub.py render /path/to/demo-project
-python scripts/redub.py status /path/to/demo-project
-python scripts/revise_demo.py /path/to/demo-project
-python scripts/redub.py render /path/to/demo-project
-```
-
-示例生成五秒色块和两种合成音调，删掉中间半秒，验证人物账本、剪辑映射、音轨和编码尾部。revise_demo 演示只改 A、触发旧 take 失效、换入完整新 A、复用 B。它不演示真人声线质量。
-
-真实制作从 `redub.py init` 开始，按 [数据契约](references/project-contract.md) 填写账本。完整能力入口见 [SKILL.md](SKILL.md)。
-
-## 工程特点
-
-- 台词逐次换人，固定 ID；源时间与成片时间分离。
-- 配音绑定文字、角色、参考内容、参数和后端版本；变化时失效，未改句复用。
-- 原子 JSON、单写者锁、不可变 take、内容寻址版本；超时后先检查原进程。
-- 拒绝静音、串角色收据、越窗有声尾音、重叠发言与覆盖原声名句。
-- 对最终 MP4 解码，逐段核对声音和混音，不把“生成文件存在”当完成。
-- 事实／指控／传闻／虚构账本，以及用户与 agent 分开的审稿收据。
-
-## 能力边界
-
-当前是单声道短场景工具。Windows 包提供 IndexTTS 配音、Whisper 转录入口和视频装配；自动人声分离、声纹验证、口型重建、复杂重叠人声和云端配音 SDK 不在内置功能中。背景分轨或干净现场底声按原片情况准备；配音质量仍需真实试听。
-
-支持相对资产路径和 UTF-8。测试平台及实际测试结果见 [RELEASE_NOTES.md](RELEASE_NOTES.md)；CI 定义不等于对应平台已经跑过。
-
-## 测试
+### 3. 给视频和主题
 
 ```text
-python -m unittest discover -s tests -v
+使用 scene-redub。
+
+视频：[视频链接或本地文件路径]
+主题：AI 行业吐槽。
+
+沿用原场景的人物关系和对话节奏，把台词改得具体、好懂、有讽刺感。
+配音尽量保留角色在这一段里的语气和停顿。
+先给我看剧本，再做两句配音小样，确认后合成完整片段。
 ```
 
-核心测试无联网／模型需求。媒体测试需 numpy 和 FFmpeg，缺少时明确 skip，不能把 skip 当媒体通过。故障用例覆盖参考变化、陈旧 take、角色错配、裁切穿句、静音、尾字超时、残留项目锁、损坏资产和 AAC 成片尾部。
+通常会按这个顺序一起完成：**确认场景 → 改写台词 → 试听小样 → 配完整段 → 检查字幕和成片**。你可以随时指出要改的句子或时间点。
 
-## 发布内容
+## 使用示例
 
-发行包只含原创工作流、脚本、文档、测试和合成示例生成器。没有原电影、真人声音、私人文档、模型权重、密钥或项目绝对路径。依赖和模型分别受其上游许可约束。项目不隶属于任何模型厂商或电影制作方。
+**换个主题改编**
 
-本包原创内容使用 MIT 许可，见 [LICENSE](LICENSE)。第三方说明仅链接，未复制第三方 skill 正文。发布工具会按允许列表打包、检查常见私人路径／密钥模式并生成 SHA-256 清单；扫描不能代替人工检查新加入的文件。
+> 把这段讨价还价改成甲方和程序员谈需求。保留原来的冲突和笑点位置，最后落到“加需求得加钱”。
 
-源码贡献、问题报告和从 Git checkout 构建发行包，见 [CONTRIBUTING.md](CONTRIBUTING.md)。
+**调整表演**
+
+> 第二个人这两句太平了。参考他在原片里反问时的语气，保留那口停顿，整句重新配。
+
+**继续修改已有工程**
+
+> 继续上次的项目。只改 02:00 到 02:20：先核对说话人，再把最后三句写得更直白，其他已确认的部分保留。
+
+完成后可交付 **配音视频、改编台词、SRT 字幕和可继续修改的项目**。
+
+## 运行环境
+
+Windows 自动安装版支持 **Windows x64**。建议 32 GB 内存、25 GB 空闲磁盘；使用 NVIDIA 显卡时建议 12 GB 以上显存。安装器会检查可用资源，条件不足时选择 CPU，生成速度会较慢。
+
+客户端需要能读写本地文件并执行程序。自定义安装位置、下载续装和常用命令见 [Windows 使用指南](references/windows.md)；其他系统或已有配音环境见 [后端配置](references/backends.md)。
+
+当前主要用于短场景对话。角色语气以小样试听为准；自动人声分离、口型同步和重叠对白处理需要另外的工具配合。
+
+## 文档
+
+| 文档 | 内容 |
+| --- | --- |
+| [Skill 工作流程](SKILL.md) | AI 如何找场景、改稿、配音和检查成片 |
+| [Windows 使用指南](references/windows.md) | 安装、运行环境和制作命令 |
+| [编剧指南](references/writing-room.md) | 对话逻辑、包袱和素材使用 |
+| [配音与表演](references/performance.md) | 参考音频选择、小样对照和语气调整 |
+| [开发与贡献](CONTRIBUTING.md) | 源码使用、测试和打包 |
+| [版本记录](CHANGELOG.md) | 各版本变化；实际验证见 [发布说明](RELEASE_NOTES.md) |
+
+## 许可
+
+项目代码与 Skill 文档采用 [MIT License](LICENSE)。使用的模型和第三方依赖遵循各自的上游许可。

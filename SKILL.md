@@ -97,4 +97,4 @@ python <skill>/scripts/redub.py report <project>
 | 下载／推理超时 | 查原进程、日志、项目锁、磁盘；不重复提交 |
 | 没有可用配音后端 | 先完成剧本、分句、参考清单，配置实际后端或导入录音 |
 
-工程测试与发行边界见 [README.md](README.md)。`scripts/make_demo.py` 仅生成色块和音调，不含影视或真人声音。
+工程测试与发布见 [CONTRIBUTING.md](CONTRIBUTING.md)。`scripts/make_demo.py` 仅生成色块和音调，不含影视或真人声音。
